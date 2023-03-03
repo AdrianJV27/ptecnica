@@ -20,3 +20,4 @@ use App\Http\Controllers\UserController;
 // });
 
 Route::apiResource('user', UserController::class);
+Route::get('/top-domain', [UserController::class, 'topDomain']);

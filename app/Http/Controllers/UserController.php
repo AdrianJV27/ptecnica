@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -94,5 +95,21 @@ class UserController extends Controller
 
         $user->delete();
         return response()->noContent();
+    }
+    /**
+     * Display top 3 domains.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function topDomain(){
+
+        $users = DB::table('users')
+                ->select(DB::raw('count(*) as domain_count, SUBSTRING_INDEX(email, "@", -1) as domain'))
+                ->groupBy('domain')
+                ->orderByDesc('domain_count')
+                ->limit(3)
+                ->get();
+        dd($users);
+
     }
 }
