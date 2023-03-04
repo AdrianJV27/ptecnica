@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +20,12 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 
-Route::apiResource('user', UserController::class);
-Route::get('/top-domain', [UserController::class, 'topDomain']);
+
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('user', UserController::class);
+    Route::get('/top-domain', [UserController::class, 'topDomain']);
+    Route::get('/logout', [AuthController::class, 'logout']);
+});
