@@ -87,10 +87,10 @@ GET|HEAD        api/logout ................................. AuthController@logo
 
 Todos los endpoint requieren el header *Accept* *application/json*
 
-Para usar cualquier ruta también se necesita autenticarse con el token de la propiedad *accessToken* del objeto que devuelve la ruta *login* o *register*
-
 Para las rutas *Store*, *Login*, *Register* el body debe ser *form-data*
 
 Para la ruta *Update* el body debe ser *x-www-form-urlencoded*
+
+Para usar cualquier ruta también se necesita autenticarse con el token de la propiedad *accessToken* del objeto que devuelve la ruta *login* o *register*
 
 Para usar el token se debe ir a la pestaña *Authorization* y seleccionar el tipo *Bearer Token* y añadir ahí el token que nos ha retornado la ruta *Login* o *Register*
