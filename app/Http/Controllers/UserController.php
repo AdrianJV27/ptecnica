@@ -115,7 +115,7 @@ class UserController extends Controller
                 ->orderByDesc('domain_count')
                 ->limit(3)
                 ->get();
-        dd($users);
-
+                
+        return $users;
     }
 }
