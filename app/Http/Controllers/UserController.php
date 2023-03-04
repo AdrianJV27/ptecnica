@@ -38,6 +38,8 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->created_at = now();
+        $user->updated_at = now();
 
         $user->save();
 
@@ -56,6 +58,7 @@ class UserController extends Controller
         if(is_null($user)) {
             return response()->json('User not exist', 404);
         }
+        return $user;
     }
 
     /**
@@ -69,13 +72,14 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255|string',
-            'email' => 'required|unique:users|max:255|email|string',
+            'email' => 'unique:users|max:255|email|string',
             'password' => 'required|max:255|string'
         ]);
-
+        
         $user->name = $request->name;
-        $user->email = $request->email;
+        $user->email = $request->email ?? $user->email;
         $user->password = $request->password;
+        $user->updated_at = now();
 
         $user->update();
 

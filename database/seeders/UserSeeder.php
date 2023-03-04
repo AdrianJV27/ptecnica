@@ -26,6 +26,8 @@ class UserSeeder extends Seeder
                 'name' => Str::random(10),
                 'email' => Str::random(10).'@'.DOMINAIN[random_int(0, COUNT_DOMAIN)],
                 'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }
