@@ -2,20 +2,28 @@
 
 API que implementa un CRUD de usuarios con autenticación
 
-## Instalación
+## Primeros pasos
 
 ```bash
+#Instala todos los paquetes
+composer install
+```
+Cambiar el *.env.example* por *.env* y añadir el nombre, usuario y contraseña de la base de datos
+
+```bash
+#Migrar las tablas
 php artisan migrate
 ```
 ```bash
-php artisan make:seeder UserSeeder
+#Crear registros en la tabla de usuarios
+php artisan db:seed --class=UserSeeder
 ```
 
 ## Rutas (routes\api.php)
 
 La siguiente línea de código crea automáticamente todas las rutas de un CRUD básico.
 ```php
-    Route::apiResource('user', UserController::class);
+Route::apiResource('user', UserController::class);
 ```  
 
 ```bash
