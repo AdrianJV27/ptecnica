@@ -1,64 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Prueba técnica
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+API que implementa un CRUD de usuarios con autenticación
 
-## About Laravel
+## Instalación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```bash
+php artisan migrate
+```
+```bash
+php artisan make:seeder UserSeeder
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Rutas (routes\api.php)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+La siguiente línea de código crea automáticamente todas las rutas de un CRUD básico.
+```php
+    Route::apiResource('user', UserController::class);
+```  
 
-## Learning Laravel
+```bash
+#Muestra todos los usuarios
+GET|HEAD        api/user ....................... user.index › UserController@index 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#Almacena un usuario (requiere un json con las keys *name*, *email* y *password*)
+POST            api/user ....................... user.store › UserController@store 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#Muestra un usuario (requiere especificarle en la ruta el id del usuario)
+GET|HEAD        api/user/{user} .................. user.show › UserController@show 
 
-## Laravel Sponsors
+#Actualiza un usuario (requiere especificarle en la ruta el id del usuario y un json con las keys *name*, *email* y *password*)
+PUT|PATCH       api/user/{user} .............. user.update › UserController@update 
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+#Elimina un usuario (requiere especificarle en la ruta el id del usuario)
+DELETE          api/user/{user} ............ user.destroy › UserController@destroy 
 
-### Premium Partners
+```  
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
 
-## Contributing
+Ruta del top dominios más usados
+```php
+Route::get('/top-domain', [UserController::class, 'topDomain']);
+``` 
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```php
+#Devuelve un objeto con los 3 dominios más usados en orden descendiente
+GET|HEAD        api/top-domain .......................... UserController@topDomain 
+```
 
-## Code of Conduct
+Ruta de registro
+```php
+Route::post('/register', [AuthController::class, 'register']);
+```  
+```php
+#Registra el usuario en la base de datos y genera un token para autenticarte en la API (requiere un json con las keys *name*, *email* y *password*)
+POST            api/register ............................. AuthController@register
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Ruta de log in
+```php
+Route::post('/login', [AuthController::class, 'login']);
+```  
+```php
+#Comprueba si el usuario existe para iniciar sesión y genera un token para autenticarte en la API (requiere un json con las keys *email* y *password*)
+POST            api/login ................................... AuthController@login 
+```
 
-## Security Vulnerabilities
+Ruta de log out
+```php
+Route::get('/logout', [AuthController::class, 'logout']);
+```  
+```php
+#Elimina el token del usuario y para no poder usar la API hasta que vuelva a iniciar sesión y generar uno nuevo
+GET|HEAD        api/logout ................................. AuthController@logout 
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+## Configuración POSTMAN
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Todos los endpoint requieren el header *Accept* *application/json*
+
+Para usar cualquier ruta también se necesita autenticarse con el token de la propiedad *accessToken* del objeto que devuelve la ruta *login* o *register*
+
+Para las rutas *Store*, *Login*, *Register* el body debe ser *form-data*
+
+Para la ruta *Update* el body debe ser *x-www-form-urlencoded*
+
+Para usar el token se debe ir a la pestaña *Authorization* y seleccionar el tipo *Bearer Token* y añadir ahí el token que nos ha retornado la ruta *Login* o *Register*
