@@ -68,13 +68,18 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|max:255|string',
             'email' => 'unique:users|max:255|email|string',
             'password' => 'required|max:255|string'
         ]);
+
+        $user = User::find($id);
+        if(is_null($user)) {
+            return response()->json('User not exist', 404);
+        }
         
         $user->name = $request->name;
         $user->email = $request->email ?? $user->email;
@@ -88,7 +93,7 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
